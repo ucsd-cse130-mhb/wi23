@@ -1,0 +1,121 @@
+
+--------------------------------------------------------------------------------
+-- Booleans
+--------------------------------------------------------------------------------
+
+let TRUE  = \x y -> x
+let FALSE = \x y -> y
+let ITE   = \b x y -> b x y
+let AND   = \b1 b2 -> ITE b1 b2 FALSE
+let OR    = \b1 b2 -> ITE b1 TRUE b2
+
+--------------------------------------------------------------------------------
+-- Pairs
+--------------------------------------------------------------------------------
+
+let PAIR  = \x y b -> ITE b x y
+let FST   = \p     -> p TRUE
+let SND   = \p     -> p FALSE
+
+--------------------------------------------------------------------------------
+-- Numbers
+--------------------------------------------------------------------------------
+
+let ZERO  = \f x -> x
+let ONE   = \f x -> f x
+let TWO   = \f x -> f (f x)
+let THREE = \f x -> f (f (f x))
+let FOUR  = \f x -> f (f (f (f x)))
+let FIVE  = \f x -> f (f (f (f (f x))))
+let SIX   = \f x -> f (f (f (f (f (f x)))))
+
+let INC   = \n f x -> f (n f x)
+let DEC   = \n -> FST (n (\p -> PAIR (SND p) (INC (SND p))) (PAIR ZERO ZERO))
+
+let ADD   = \n m -> n INC m
+let SUB   = \n m -> m DEC n
+let MUL   = \n m -> n (ADD m) ZERO
+let ISZ   = \n -> n (\z -> FALSE) TRUE
+
+--------------------------------------------------------------------------------
+-- Fixpoint Combinator
+--------------------------------------------------------------------------------
+
+let FIX = \stp -> (\x -> stp (x x)) (\x -> stp (x x))
+
+--------------------------------------------------------------------------------
+-- Lists
+--------------------------------------------------------------------------------
+
+let NIL  =         \c n -> n
+let CONS = \h t -> \c n -> c h (t c n)
+
+--------------------------------------------------------------------------------
+-- Ignore this definition; it's a hack to allow you to test some parts before
+-- completing others
+--------------------------------------------------------------------------------
+
+let TODO  = \i g n o r e -> i g n o r e
+
+--------------------------------------------------------------------------------
+-- do not modify text BEFORE this line
+--------------------------------------------------------------------------------
+
+-- (a) clone: produce a list of n copies of x
+let CLONE = \n x -> TODO
+
+-- (b) Does the list contain zero?
+let HASZERO = \ls -> TODO
+
+-- (c) List Concatenation
+let CONCAT  = \ls1 ls2 -> TODO
+
+--------------------------------------------------------------------------------
+-- do not modify text AFTER this line
+--------------------------------------------------------------------------------
+
+-- part (a)
+
+eval clone_zero :
+  CLONE ZERO ONE
+  =~> NIL
+
+eval clone_one :
+  CLONE ONE TWO
+  =~> \c n -> c TWO n            -- i.e. CONS TWO NIL
+
+eval clone_two :
+  CLONE TWO ONE
+  =~> \c n -> c ONE (c ONE n)    -- i.e. CONS ONE (CONS ONE NIL)
+
+-- part (b)
+
+eval haszero_nil :
+  HASZERO NIL
+  =~> FALSE
+
+eval haszero_yes :
+  HASZERO (CONS ONE (CONS ZERO NIL))
+  =~> TRUE
+
+eval haszero_no :
+  HASZERO (CONS ONE (CONS TWO NIL))
+  =~> FALSE
+
+-- part (c)
+
+eval concat_nil_nil :
+  CONCAT NIL NIL
+  =~> NIL
+
+eval concat_one_nil :
+  CONCAT (CONS ONE NIL) NIL
+  =~> \c n -> c ONE n            -- i.e. CONS ONE NIL
+
+eval concat_nil_one :
+  CONCAT NIL (CONS ONE NIL)
+  =~> \c n -> c ONE n            -- i.e. CONS ONE NIL
+
+eval concat_one_one :
+  CONCAT (CONS ONE NIL) (CONS TWO NIL)
+  =~> \c n -> c ONE (c TWO n)    -- i.e. CONS ONE (CONS TWO NIL)

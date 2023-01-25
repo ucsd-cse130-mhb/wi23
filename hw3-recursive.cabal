@@ -1,0 +1,41 @@
+name:                hw3-recursive
+version:             0.1.0.0
+synopsis:            Starter code for cse130 homework 03-recursive
+license:             MIT
+license-file:        LICENSE
+author:              Michael Borkowski and Ranjit Jhala
+maintainer:          mborkows@eng.ucsd.edu
+category:            Language
+build-type:          Simple
+cabal-version:       >=1.10
+
+Library
+  ghc-options:         -W -threaded
+  exposed-modules:     Hw3
+
+  -- other-extensions:
+  build-depends:       array, base
+
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+
+executable hw3
+  build-depends:       base
+  default-language:    Haskell2010
+  main-is:             Main.hs
+
+test-suite test
+  default-language: Haskell2010
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   tests     
+  other-modules:    Common    
+  ghc-options:      -threaded
+  main-is:          Test.hs
+  build-depends:    base,
+                    directory,
+                    filepath,
+                    process,
+                    tasty,
+                    tasty-hunit,
+                    elsa >= 0.2.2.0,
+                    hw3-recursive
