@@ -11,7 +11,10 @@ cabal-version:       >=1.10
 
 Library
   ghc-options:         -W -threaded
-  exposed-modules:     Hw3
+  exposed-modules:     Practice_Lec7,
+                       Practice_Lec8,
+                       Practice_Lec9,
+                       Practice_Lec10
 
   -- other-extensions:
   build-depends:       array, base
