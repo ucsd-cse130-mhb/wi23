@@ -1,4 +1,4 @@
-module Pratice_Lec10 where
+module Practice_Lec10 where
 
 import Prelude hiding (map, filter, flip)
 

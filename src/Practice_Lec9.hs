@@ -1,4 +1,4 @@
-module Pratice_Lec9 where
+module Practice_Lec9 where
 
 -- Lecture: Monday, January 30, 2023
 -- Practice with Product/Sum Data Types
