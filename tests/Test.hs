@@ -25,8 +25,8 @@ main = hspec $ do
         specify "factorial 3 == 6" $ do
           factorial 3 `shouldBe` 6
 
-        specify "factorial 0 == 0" $ do
-          factorial 0 `shouldBe` 0
+        specify "factorial 0 == 1" $ do
+          factorial 0 `shouldBe` 1
 
-        specify "factorial (-90) == 0" $ do
-          factorial (-90) `shouldBe` 0
+        specify "factorial (-90) == 1" $ do
+          factorial (-90) `shouldBe` 1

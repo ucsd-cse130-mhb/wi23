@@ -32,7 +32,7 @@ xor3 x y z = error "split this into equations with patterns"
 
 -- 3) Give a recursive definition for factorial in Haskell
 --   using whatever techniques you want. For the sake of
---   completeness set factorial n = 1 for any negative n.
+--   completeness set factorial n = 1 for any non-positive n.
 
 factorial :: Int -> Int
 factorial n = error "add an implementation"
@@ -41,7 +41,7 @@ factorial n = error "add an implementation"
 -- 6
 
 -- >>> factorial 0
--- 0
+-- 1
 
 -- >>> factorial (-90)
--- 0
+-- 1
