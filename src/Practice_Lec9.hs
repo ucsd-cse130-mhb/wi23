@@ -3,8 +3,8 @@ module Practice_Lec9 where
 -- Lecture: Monday, January 30, 2023
 -- Practice with Product/Sum Data Types
 
-data Date = Date Int Int Int
-data Time = Time Int Int Int
+data Date = Date Int Int Int deriving (Show, Eq)
+data Time = Time Int Int Int deriving (Show, Eq)
 
 -- 1) Write functions to convert each of these 
 --   data types to Strings by implementing a 
