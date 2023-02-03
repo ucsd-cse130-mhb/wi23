@@ -16,3 +16,12 @@ update:
 turnin:
 	git commit -a -m "turnin"
 	git push origin main
+
+lec7:
+	stack test --test-arguments='--match "Lecture 7"'
+lec8:
+	stack test --test-arguments='--match "Lecture 8"'
+lec9:
+	stack test --test-arguments='--match "Lecture 9"'
+lec10:
+	stack test --test-arguments='--match "Lecture 10"'
