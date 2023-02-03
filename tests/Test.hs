@@ -18,8 +18,8 @@ main = hspec $ do
         specify "True True True => True" $ do
           xor3 True True True `shouldBe` True
 
-        specify "False True False => False" $ do
-          xor3 False True False `shouldBe` False
+        specify "False True False => True" $ do
+          xor3 False True False `shouldBe` True
 
       describe "factorial" $ do
         specify "factorial 3 == 6" $ do
