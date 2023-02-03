@@ -1,4 +1,6 @@
-import Practice_Lec10
+{-# LANGUAGE ImportQualifiedPost #-}
+import Practice_Lec10 (List (..), Tree (..), flipTree, isFlipped)
+import Practice_Lec10 qualified as L10 -- don't blindly import map and filter
 import Practice_Lec7
 import Practice_Lec8
 import Practice_Lec9
@@ -82,3 +84,52 @@ main = hspec $ do
               ]
           ]
           `shouldBe` 17
+
+  describe "Lecture 10: All About Recursion" $ do
+    describe "map" $ do
+      specify "map negate [] == []" $ do
+        L10.map negate Nil `shouldBe` Nil 
+
+      specify "map (\\n -> n * n * n) [1, 3, 5, 7] == [1, 27, 125, 343]" $ do
+        L10.map (\n -> n * n * n) (Cons 1 (Cons 3 (Cons 5 (Cons 7 Nil)))) `shouldBe` Cons 1 (Cons 27 (Cons 125 (Cons 343 Nil)))
+
+    describe "filter" $ do
+      specify "filter (\\x -> True) [] == []" $ do
+        L10.filter (\x -> True) Nil `shouldBe` Nil 
+
+      specify "filter (\\x -> False) [1, 2, 3, 4, 5, 6] == []" $ do
+        L10.filter (\x -> False) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 Nil)))))) `shouldBe` Nil 
+
+      specify "filter (\\n -> n `mod` 2 == 0) [1, 2, 3, 4, 5, 6, 7] == [2, 4, 6]" $ do
+        L10.filter (\n -> n `mod` 2 == 0) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil)))))))  `shouldBe` Cons 2 (Cons 4 (Cons 6 Nil)) 
+
+    describe "flipTree" $ do
+      specify "flipTree Leaf == Leaf" $ do
+        flipTree L10.Leaf `shouldBe` Leaf
+
+      specify "flipTree (Node 5 Leaf (Node 1 Leaf Leaf)) == (Node 5 (Node 1 Leaf Leaf) Leaf)" $ do
+        flipTree (Node 5 Leaf (Node 1 Leaf Leaf)) `shouldBe` Node 5 (Node 1 Leaf Leaf) Leaf
+
+      specify "flipTree (Node 1 (Node 2 (Node 3 Leaf Leaf) Leaf) (Node 4 Leaf Leaf)) == Node 1 (Node 4 Leaf Leaf) (Node 2 Leaf (Node 3 Leaf Leaf))" $ do
+        flipTree
+          ( Node
+              1
+              (Node 2 (Node 3 Leaf Leaf) Leaf)
+              (Node 4 Leaf Leaf)
+          )
+          `shouldBe` Node
+            1
+            (Node 4 Leaf Leaf)
+            (Node 2 Leaf (Node 3 Leaf Leaf))
+
+      specify "isFlipped Leaf Leaf == True" $ do
+        isFlipped Leaf Leaf `shouldBe` True
+
+      specify "isFlipped (Node 5 Leaf (Node 1 Leaf Leaf)) (Node 5 Leaf (Node 1 Leaf Leaf)) == False" $ do
+        isFlipped (Node 5 Leaf (Node 1 Leaf Leaf)) (Node 5 Leaf (Node 1 Leaf Leaf)) `shouldBe` False
+
+      specify "isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 2 (Node 2 Leaf Leaf) Leaf) == False" $ do
+        isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 2 (Node 2 Leaf Leaf) Leaf) `shouldBe` False
+
+      specify "isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 1 (Node 1 Leaf Leaf) Leaf)" $ do
+        isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 1 (Node 1 Leaf Leaf) Leaf) `shouldBe` True
