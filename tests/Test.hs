@@ -81,4 +81,4 @@ main = hspec $ do
                 "San Elijo State Beach"
               ]
           ]
-          `shouldBe` 6
+          `shouldBe` 17
