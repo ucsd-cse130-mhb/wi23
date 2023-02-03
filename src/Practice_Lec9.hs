@@ -34,7 +34,8 @@ timeFormat (Time h m s) = error "fill this in"
 -- 2) Write a function `incrDate` that takes a Date
 --   object as its input and returns the next date.
 --   To reduce the corner cases, just assume the date
---   is a valid date in the 21st century.
+--   is a valid date in the 21st century and ignore
+--   leap years.
 
 incrDate :: Date -> Date
 incrDate (Date m d y) = error "fill this in"
