@@ -10,20 +10,21 @@ import Prelude hiding (map, filter, flip)
 
 data List = Nil           -- base constructor
           | Cons Int List -- inductive constructor
+          deriving (Show, Eq)
 
 -- 1) Implement a function `map` that takes a 
 --   function f (of type Int -> Int) and a list of
 --   Ints and returns a new list that consists of
 --   `f` applied to every element of the input list.
 
-map :: (Int -> Int) -> [Int] -> [Int]
+map :: (Int -> Int) -> List -> List 
 map f xs = error "fill this in"
 
--- >>> map negate []
--- []
+-- >>> map negate Nil
+-- Nil
 
--- >>> map (\n -> n * n * n) [1, 3, 5, 7]
--- [1, 27, 125, 343]
+-- >>> map (\n -> n * n * n) (Cons 1 (Cons 3 (Cons 5 (Cons 7 Nil))))
+-- Cons 1 (Cons 27 (Cons 125 (Cons 343 Nil)))
 
 -- 2) Implement a function `filter` that takes a 
 --   function `f` (of type `Int -> Bool`) and a list of
@@ -31,17 +32,17 @@ map f xs = error "fill this in"
 --   of those elements `x` such that `f x` evaluates
 --   to True.
 
-filter :: (Int -> Bool) -> [Int] -> [Int]
+filter :: (Int -> Bool) -> List -> List 
 filter f xs = error "fill this in"
 
--- >>> filter (\x -> True) []
--- []
+-- >>> filter (\x -> True) Nil
+-- Nil
 
--- >>> filter (\x -> False) [1, 2, 3, 4, 5, 6]
--- []
+-- >>> filter (\x -> False) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 Nil))))))
+-- Nil 
 
--- >>> filter (\n -> n `mod` 2 == 0) [1, 2, 3, 4, 5, 6, 7]
--- [2, 4, 6]
+-- >>> filter (\n -> n `mod` 2 == 0) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil))))))) 
+-- Cons 2 (Cons 4 (Cons 6 Nil))
 
 -- Use the first definition of `Tree` from the lecture
 --   for the following two questions:
