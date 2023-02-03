@@ -34,4 +34,5 @@ test-suite test
   ghc-options:      -threaded
   main-is:          Test.hs
   build-depends:    base,
+                    hspec,
                     wi23
