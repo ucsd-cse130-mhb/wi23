@@ -47,7 +47,7 @@ filter f xs = error "fill this in"
 -- Use the first definition of `Tree` from the lecture
 --   for the following two questions:
 
-data Tree = Leaf | Node Int Tree Tree
+data Tree = Leaf | Node Int Tree Tree deriving (Show, Eq)
 
 -- 3) Implement a function `flipTree`, that takes a Tree
 --   as input and returns the "mirror image" of the Tree,
