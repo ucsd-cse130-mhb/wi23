@@ -25,7 +25,7 @@ dateFormat (Date m d y) = error "fill this in"
 -- >>> dateFormat (Date 12 12 2022)
 -- "December 12, 2022"
 
-timeFormat :: Date -> String
+timeFormat :: Time -> String
 timeFormat (Time h m s) = error "fill this in"
 
 -- >>> timeFormat (Time 6 30 00)
