@@ -8,4 +8,5 @@ the `-- >>>` lines to run those test cases in the file.
 
 Alternatively, you can use the test suite. Running `make lecx`, where `x` is
 the lecture you're working on, will run the tests for that lecture. For example,
-`make lec7` will run the tests for lecture 7.
+`make lec7` will run the tests for lecture 7. Running `make`, or `stack test`,
+will run all the tests.
