@@ -1,12 +1,15 @@
 {-# LANGUAGE ImportQualifiedPost #-}
+
+-- don't blindly import map and filter
+
+import Data.Foldable (foldl')
 import Practice_Lec10 (List (..), Tree (..), flipTree, isFlipped)
-import Practice_Lec10 qualified as L10 -- don't blindly import map and filter
+import Practice_Lec10 qualified as L10
 import Practice_Lec7
 import Practice_Lec8
 import Practice_Lec9
 import Test.Hspec
 import Test.QuickCheck
-import Data.Foldable (foldl')
 
 main :: IO ()
 main = hspec $ do
@@ -16,7 +19,8 @@ main = hspec $ do
         and3 True True False `shouldBe` False
 
       it "ANDs three booleans" $
-        property $ \b1 b2 b3 -> and3 b1 b2 b3 == (b1 && b2 && b3)
+        property $
+          \b1 b2 b3 -> and3 b1 b2 b3 == (b1 && b2 && b3)
 
     describe "xor3" $ do
       specify "True True False => False" $ do
@@ -30,8 +34,9 @@ main = hspec $ do
 
       it "XORs three booleans" $
         -- /= works for xor here - if they're not equal xor is true
-        property $ \b1 b2 b3 -> xor3 b1 b2 b3 == ((b1 /= b2) /= b3)
-        
+        property $
+          \b1 b2 b3 -> xor3 b1 b2 b3 == ((b1 /= b2) /= b3)
+
     describe "factorial" $ do
       specify "factorial 3 == 6" $ do
         factorial 3 `shouldBe` 6
@@ -43,10 +48,12 @@ main = hspec $ do
         factorial (-90) `shouldBe` 1
 
       it "calculates the factorial of positive numbers" $
-        property $ \(Positive n) -> factorial n == product [1..n]
+        property $
+          \(Positive n) -> factorial n == product [1 .. n]
 
       it "returns 1 for nonpositive numbers" $
-        property $ \(NonPositive n) -> factorial n == 1
+        property $
+          \(NonPositive n) -> factorial n == 1
 
   describe "Lecture 8: Coding in Haskell" $ do
     describe "replaceAll" $ do
@@ -57,10 +64,12 @@ main = hspec $ do
         replaceAll [1, 2, 3] `shouldBe` ["foo", "foo", "foo"]
 
       it "replaces all elements in a list with 'foo'" $
-        property $ \xs -> all (== "foo") (replaceAll (xs :: [Int]))
+        property $
+          \xs -> all (== "foo") (replaceAll (xs :: [Int]))
 
       it "has the same number of elements as the original list" $
-        property $ \xs -> length (replaceAll xs) == length (xs :: [Int])
+        property $
+          \xs -> length (replaceAll xs) == length (xs :: [Int])
 
     describe "mytake" $ do
       specify "mytake 2 ['a', 'b', 'c', 'd'] == ['a', 'b']" $ do
@@ -73,7 +82,8 @@ main = hspec $ do
         mytake (-2) ['a', 'b', 'c', 'd'] `shouldBe` []
 
       it "takes the given number of elements from a list" $
-        property $ \n xs -> mytake n xs == take n (xs :: String)
+        property $
+          \n xs -> mytake n xs == take n (xs :: String)
 
   describe "Lecture 9: Datatypes in Haskell" $ do
     describe "dateFormat" $ do
@@ -109,32 +119,36 @@ main = hspec $ do
           ]
           `shouldBe` 17
 
-      it "can determine the wordcount of any arbitrary paragraph" $ withMaxSuccess 50 $
-        property $ \(ParagraphCounts p count) -> wordCount p == count
+      it "can determine the wordcount of any arbitrary paragraph" $
+        withMaxSuccess 50 $
+          property $
+            \(ParagraphCounts p count) -> wordCount p == count
 
   describe "Lecture 10: All About Recursion" $ do
     describe "map" $ do
       specify "map negate [] == []" $ do
-        L10.map negate Nil `shouldBe` Nil 
+        L10.map negate Nil `shouldBe` Nil
 
       specify "map (\\n -> n * n * n) [1, 3, 5, 7] == [1, 27, 125, 343]" $ do
         L10.map (\n -> n * n * n) (Cons 1 (Cons 3 (Cons 5 (Cons 7 Nil)))) `shouldBe` Cons 1 (Cons 27 (Cons 125 (Cons 343 Nil)))
 
       it "maps a function across a list" $
-        property $ \(Fn f) xs -> map f xs == toHaskellList (L10.map f (toCustomList xs))
+        property $
+          \(Fn f) xs -> map f xs == toHaskellList (L10.map f (toCustomList xs))
 
     describe "filter" $ do
       specify "filter (\\x -> True) [] == []" $ do
-        L10.filter (\x -> True) Nil `shouldBe` Nil 
+        L10.filter (\x -> True) Nil `shouldBe` Nil
 
       specify "filter (\\x -> False) [1, 2, 3, 4, 5, 6] == []" $ do
-        L10.filter (\x -> False) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 Nil)))))) `shouldBe` Nil 
+        L10.filter (\x -> False) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 Nil)))))) `shouldBe` Nil
 
       specify "filter (\\n -> n `mod` 2 == 0) [1, 2, 3, 4, 5, 6, 7] == [2, 4, 6]" $ do
-        L10.filter (\n -> n `mod` 2 == 0) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil)))))))  `shouldBe` Cons 2 (Cons 4 (Cons 6 Nil)) 
+        L10.filter (\n -> n `mod` 2 == 0) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil))))))) `shouldBe` Cons 2 (Cons 4 (Cons 6 Nil))
 
       it "filters a list based on the given function" $
-        property $ \(Fn f) xs -> filter f xs == toHaskellList (L10.filter f (toCustomList xs))
+        property $
+          \(Fn f) xs -> filter f xs == toHaskellList (L10.filter f (toCustomList xs))
 
     describe "flipTree" $ do
       specify "flipTree Leaf == Leaf" $ do
@@ -156,10 +170,12 @@ main = hspec $ do
             (Node 2 Leaf (Node 3 Leaf Leaf))
 
       it "correctly flips a tree" $
-        property $ \t -> testIsFlipped t (flipTree t)
+        property $
+          \t -> testIsFlipped t (flipTree t)
 
       it "is reversible when applied twice" $
-        property $ \t -> t == flipTree (flipTree t)
+        property $
+          \t -> t == flipTree (flipTree t)
 
     describe "isFlipped" $ do
       specify "isFlipped Leaf Leaf == True" $ do
@@ -175,11 +191,12 @@ main = hspec $ do
         isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 1 (Node 1 Leaf Leaf) Leaf) `shouldBe` True
 
       it "returns true for flipped trees" $
-        property $ \t -> isFlipped t (flipTree t)
+        property $
+          \t -> isFlipped t (flipTree t)
 
       it "returns false for non-flipped trees" $
-        property $ \t t' -> (flipTree t /= t') ==> not (isFlipped t t')
-
+        property $
+          \t t' -> (flipTree t /= t') ==> not (isFlipped t t')
 
 -- Problem 9 Utils
 data ParagraphCounts = ParagraphCounts [Paragraph] Int deriving (Show, Eq)
@@ -187,18 +204,24 @@ data ParagraphCounts = ParagraphCounts [Paragraph] Int deriving (Show, Eq)
 instance Arbitrary ParagraphCounts where
   arbitrary = sized $ \n -> do
     len <- arbitrary `suchThat` (<= n)
-    paraLen <- vectorOf len $ frequency [(4, do
-      words <- listOf (listOf1 (elements ['a'..'z']))
-      frequency [(3, return (Text (unwords words), length words)), (1, (\h -> (Heading h (unwords words), length words)) <$> choose (1, 6))]
-      ),
-      (1, do
-      words <- listOf (listOf (listOf1 (elements ['a'..'z'])))
-      let len = foldl' (\acc words -> acc + length words) 0 words
-      (\b -> (List b (map unwords words), len)) <$> arbitrary
-      )]
-    let (paras, len) = foldl' (\(paras, totallen) (para, len) -> (para:paras, totallen + len)) ([], 0) paraLen
+    paraLen <-
+      vectorOf len $
+        frequency
+          [ ( 4,
+              do
+                words <- listOf (listOf1 (elements ['a' .. 'z']))
+                frequency [(3, return (Text (unwords words), length words)), (1, (\h -> (Heading h (unwords words), length words)) <$> choose (1, 6))]
+            ),
+            ( 1,
+              do
+                words <- listOf (listOf (listOf1 (elements ['a' .. 'z'])))
+                let len = foldl' (\acc words -> acc + length words) 0 words
+                (\b -> (List b (map unwords words), len)) <$> arbitrary
+            )
+          ]
+    let (paras, len) = foldl' (\(paras, totallen) (para, len) -> (para : paras, totallen + len)) ([], 0) paraLen
     return $ ParagraphCounts paras len
-  
+
 -- Problem 10 Utils
 -- Convert between List and [Int] to allow for [Int] generation
 toHaskellList :: List -> [Int]
@@ -214,11 +237,20 @@ treeLen (Node _ l r) = 1 + treeLen l + treeLen r
 
 -- Generate random trees
 instance Arbitrary Tree where
-  arbitrary = sized $ \n -> if n == 0 then return Leaf else frequency [(1, return Leaf), (4, do
-    elem <- arbitrary
-    one <- resize (max 0 (n - 1)) arbitrary
-    two <- resize (max 0 (n - 1 - treeLen one)) arbitrary
-    oneof $ map return [Node elem one two, Node elem two one])]
+  arbitrary = sized $ \n ->
+    if n == 0
+      then return Leaf
+      else
+        frequency
+          [ (1, return Leaf),
+            ( 4,
+              do
+                elem <- arbitrary
+                one <- resize (max 0 (n - 1)) arbitrary
+                two <- resize (max 0 (n - 1 - treeLen one)) arbitrary
+                oneof $ map return [Node elem one two, Node elem two one]
+            )
+          ]
 
 -- PROBLEM 10 SPOILERS! Checks flipTree without assuming that the student's
 -- isFlipped is correct. See Problem 10 solutions for an easier implementation of this
