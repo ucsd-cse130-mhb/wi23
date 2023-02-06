@@ -35,4 +35,5 @@ test-suite test
   main-is:          Test.hs
   build-depends:    base,
                     hspec,
+                    QuickCheck,
                     wi23

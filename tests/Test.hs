@@ -5,6 +5,7 @@ import Practice_Lec7
 import Practice_Lec8
 import Practice_Lec9
 import Test.Hspec
+import Test.QuickCheck
 
 main :: IO ()
 main = hspec $ do
@@ -12,6 +13,9 @@ main = hspec $ do
     describe "and3" $ do
       specify "True True False => False" $ do
         and3 True True False `shouldBe` False
+
+      it "ANDs three booleans" $
+        property $ \b1 b2 b3 -> and3 b1 b2 b3 == (b1 && b2 && b3)
 
     describe "xor3" $ do
       specify "True True False => False" $ do
@@ -23,6 +27,10 @@ main = hspec $ do
       specify "False True False => True" $ do
         xor3 False True False `shouldBe` True
 
+      it "XORs three booleans" $
+        -- /= works for xor here - if they're not equal xor is true
+        property $ \b1 b2 b3 -> xor3 b1 b2 b3 == ((b1 /= b2) /= b3)
+        
     describe "factorial" $ do
       specify "factorial 3 == 6" $ do
         factorial 3 `shouldBe` 6
@@ -33,6 +41,12 @@ main = hspec $ do
       specify "factorial (-90) == 1" $ do
         factorial (-90) `shouldBe` 1
 
+      it "calculates the factorial of positive numbers" $
+        property $ \(Positive n) -> factorial n == product [1..n]
+
+      it "returns 1 for nonpositive numbers" $
+        property $ \(NonPositive n) -> factorial n == 1
+
   describe "Lecture 8: Coding in Haskell" $ do
     describe "replaceAll" $ do
       specify "replaceAll [] == []" $ do
@@ -40,6 +54,12 @@ main = hspec $ do
 
       specify "replaceAll [1,2,3] == [\"foo\", \"foo\", \"foo\"]" $ do
         replaceAll [1, 2, 3] `shouldBe` ["foo", "foo", "foo"]
+
+      it "replaces all elements in a list with 'foo'" $
+        property $ \xs -> all (== "foo") (replaceAll (xs :: [Int]))
+
+      it "has the same number of elements as the original list" $
+        property $ \xs -> length (replaceAll xs) == length (xs :: [Int])
 
     describe "mytake" $ do
       specify "mytake 2 ['a', 'b', 'c', 'd'] == ['a', 'b']" $ do
@@ -50,6 +70,9 @@ main = hspec $ do
 
       specify "mytake (-2) ['a', 'b', 'c', 'd'] == []" $ do
         mytake (-2) ['a', 'b', 'c', 'd'] `shouldBe` []
+
+      it "takes the given number of elements from a list" $
+        property $ \n xs -> mytake n xs == take n (xs :: String)
 
   describe "Lecture 9: Datatypes in Haskell" $ do
     describe "dateFormat" $ do
