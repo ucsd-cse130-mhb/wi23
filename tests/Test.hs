@@ -116,6 +116,9 @@ main = hspec $ do
       specify "map (\\n -> n * n * n) [1, 3, 5, 7] == [1, 27, 125, 343]" $ do
         L10.map (\n -> n * n * n) (Cons 1 (Cons 3 (Cons 5 (Cons 7 Nil)))) `shouldBe` Cons 1 (Cons 27 (Cons 125 (Cons 343 Nil)))
 
+      it "maps a function across a list" $
+        property $ \(Fn f) xs -> map f xs == toHaskellList (L10.map f (toCustomList xs))
+
     describe "filter" $ do
       specify "filter (\\x -> True) [] == []" $ do
         L10.filter (\x -> True) Nil `shouldBe` Nil 
@@ -125,6 +128,9 @@ main = hspec $ do
 
       specify "filter (\\n -> n `mod` 2 == 0) [1, 2, 3, 4, 5, 6, 7] == [2, 4, 6]" $ do
         L10.filter (\n -> n `mod` 2 == 0) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil)))))))  `shouldBe` Cons 2 (Cons 4 (Cons 6 Nil)) 
+
+      it "filters a list based on the given function" $
+        property $ \(Fn f) xs -> filter f xs == toHaskellList (L10.filter f (toCustomList xs))
 
     describe "flipTree" $ do
       specify "flipTree Leaf == Leaf" $ do
@@ -145,6 +151,13 @@ main = hspec $ do
             (Node 4 Leaf Leaf)
             (Node 2 Leaf (Node 3 Leaf Leaf))
 
+      it "correctly flips a tree" $
+        property $ \t -> testIsFlipped t (flipTree t)
+
+      it "is reversible when applied twice" $
+        property $ \t -> t == flipTree (flipTree t)
+
+    describe "isFlipped" $ do
       specify "isFlipped Leaf Leaf == True" $ do
         isFlipped Leaf Leaf `shouldBe` True
 
@@ -156,3 +169,30 @@ main = hspec $ do
 
       specify "isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 1 (Node 1 Leaf Leaf) Leaf)" $ do
         isFlipped (Node 1 Leaf (Node 1 Leaf Leaf)) (Node 1 (Node 1 Leaf Leaf) Leaf) `shouldBe` True
+
+      it "returns true for flipped trees" $
+        property $ \t -> isFlipped t (flipTree t)
+
+      it "returns false for non-flipped trees" $
+        property $ \t t' -> (flipTree t /= t') ==> not (isFlipped t t')
+
+
+-- Problem 10 Utils
+-- Convert between List and [Int] to allow for [Int] generation
+toHaskellList :: List -> [Int]
+toHaskellList Nil = []
+toHaskellList (Cons x xs) = x : toHaskellList xs
+
+toCustomList :: [Int] -> List
+toCustomList = foldr Cons Nil
+
+-- Generate random trees
+instance Arbitrary Tree where
+  arbitrary = oneof [return Leaf, Node <$> arbitrary <*> arbitrary <*> arbitrary]
+
+-- PROBLEM 10 SPOILERS! Checks flipTree without assuming that the student's
+-- isFlipped is correct. See Problem 10 solutions for an easier implementation of this
+testIsFlipped :: Tree -> Tree -> Bool
+testIsFlipped Leaf Leaf = True
+testIsFlipped (Node e l r) (Node e' l' r') = (e == e') && testIsFlipped l r' && testIsFlipped r l'
+testIsFlipped _ _ = False
