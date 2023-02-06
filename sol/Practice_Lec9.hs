@@ -105,6 +105,7 @@ data Paragraph
   = Text String -- 3 constructors,
   | Heading Int String -- each with different
   | List Bool [String] -- parameters
+  deriving (Show, Eq)
 
 --   Write a function `wordCount` which returns the total
 --   word count in a list of paragraph objects. The following
