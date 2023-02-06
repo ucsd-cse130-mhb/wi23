@@ -32,7 +32,11 @@ test-suite test
   type:             exitcode-stdio-1.0
   hs-source-dirs:   tests     
   ghc-options:      -threaded
-  main-is:          Test.hs
+  main-is:          Spec.hs
+  other-modules:    Practice_Lec10Spec
+                    Practice_Lec7Spec
+                    Practice_Lec8Spec
+                    Practice_Lec9Spec
   build-depends:    base,
                     hspec,
                     QuickCheck,
