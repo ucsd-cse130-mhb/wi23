@@ -6,6 +6,7 @@ import Practice_Lec8
 import Practice_Lec9
 import Test.Hspec
 import Test.QuickCheck
+import Data.Foldable (foldl')
 
 main :: IO ()
 main = hspec $ do
@@ -108,6 +109,9 @@ main = hspec $ do
           ]
           `shouldBe` 17
 
+      it "can determine the wordcount of any arbitrary paragraph" $ withMaxSuccess 50 $
+        property $ \(ParagraphCounts p count) -> wordCount p == count
+
   describe "Lecture 10: All About Recursion" $ do
     describe "map" $ do
       specify "map negate [] == []" $ do
@@ -177,6 +181,24 @@ main = hspec $ do
         property $ \t t' -> (flipTree t /= t') ==> not (isFlipped t t')
 
 
+-- Problem 9 Utils
+data ParagraphCounts = ParagraphCounts [Paragraph] Int deriving (Show, Eq)
+
+instance Arbitrary ParagraphCounts where
+  arbitrary = sized $ \n -> do
+    len <- arbitrary `suchThat` (<= n)
+    paraLen <- vectorOf len $ frequency [(4, do
+      words <- listOf (listOf1 (elements ['a'..'z']))
+      frequency [(3, return (Text (unwords words), length words)), (1, (\h -> (Heading h (unwords words), length words)) <$> choose (1, 6))]
+      ),
+      (1, do
+      words <- listOf (listOf (listOf1 (elements ['a'..'z'])))
+      let len = foldl' (\acc words -> acc + length words) 0 words
+      (\b -> (List b (map unwords words), len)) <$> arbitrary
+      )]
+    let (paras, len) = foldl' (\(paras, totallen) (para, len) -> (para:paras, totallen + len)) ([], 0) paraLen
+    return $ ParagraphCounts paras len
+  
 -- Problem 10 Utils
 -- Convert between List and [Int] to allow for [Int] generation
 toHaskellList :: List -> [Int]
