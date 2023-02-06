@@ -186,9 +186,17 @@ toHaskellList (Cons x xs) = x : toHaskellList xs
 toCustomList :: [Int] -> List
 toCustomList = foldr Cons Nil
 
+treeLen :: Tree -> Int
+treeLen Leaf = 0
+treeLen (Node _ l r) = 1 + treeLen l + treeLen r
+
 -- Generate random trees
 instance Arbitrary Tree where
-  arbitrary = oneof [return Leaf, Node <$> arbitrary <*> arbitrary <*> arbitrary]
+  arbitrary = sized $ \n -> if n == 0 then return Leaf else frequency [(1, return Leaf), (4, do
+    elem <- arbitrary
+    one <- resize (max 0 (n - 1)) arbitrary
+    two <- resize (max 0 (n - 1 - treeLen one)) arbitrary
+    oneof $ map return [Node elem one two, Node elem two one])]
 
 -- PROBLEM 10 SPOILERS! Checks flipTree without assuming that the student's
 -- isFlipped is correct. See Problem 10 solutions for an easier implementation of this
