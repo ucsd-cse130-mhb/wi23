@@ -41,7 +41,7 @@ spec = describe "Lecture 9: Datatypes in Haskell" $ do
         `shouldBe` 17
 
     it "can determine the wordcount of any arbitrary paragraph" $
-      withMaxSuccess 50 $
+      withMaxSuccess 50 $ -- otherwise, increases test run times by a significant amount
         property $
           \(ParagraphCounts p count) -> wordCount p == count
 
