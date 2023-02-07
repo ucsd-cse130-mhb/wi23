@@ -40,4 +40,5 @@ test-suite test
   build-depends:    base,
                     hspec,
                     QuickCheck,
+                    containers,
                     wi23

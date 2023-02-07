@@ -2,6 +2,7 @@
 
 module Practice_Lec10Spec where
 
+import Data.Set qualified as D
 import Practice_Lec10 (List (..), Tree (..), flipTree, isFlipped)
 import Practice_Lec10 qualified as L10 -- don't blindly import map and filter
 import Test.Hspec
@@ -16,9 +17,17 @@ spec = describe "Lecture 10: All About Recursion" $ do
     specify "map (\\n -> n * n * n) [1, 3, 5, 7] == [1, 27, 125, 343]" $ do
       L10.map (\n -> n * n * n) (Cons 1 (Cons 3 (Cons 5 (Cons 7 Nil)))) `shouldBe` Cons 1 (Cons 27 (Cons 125 (Cons 343 Nil)))
 
-    it "maps a function across a list" $
+    it "applies the given function to all list arguments, maintaining order" $
       property $
-        \(Fn f) xs -> map f xs == toHaskellList (L10.map f (toCustomList xs))
+        \(Fn f) xs -> all (\(x, x') -> f x == x') (zip xs (ourMap f xs))
+
+    it "maintains the same length as the original list" $
+      property $
+        \(Fn f) xs -> length xs == length (ourMap f xs)
+
+    it "behaves identically to Haskell's map function" $
+      property $
+        \(Fn f) xs -> map f xs == ourMap f xs
 
   describe "filter" $ do
     specify "filter (\\x -> True) [] == []" $ do
@@ -30,9 +39,22 @@ spec = describe "Lecture 10: All About Recursion" $ do
     specify "filter (\\n -> n `mod` 2 == 0) [1, 2, 3, 4, 5, 6, 7] == [2, 4, 6]" $ do
       L10.filter (\n -> n `mod` 2 == 0) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 (Cons 6 (Cons 7 Nil))))))) `shouldBe` Cons 2 (Cons 4 (Cons 6 Nil))
 
-    it "filters a list based on the given function" $
+    it "only has elements from the original list" $
       property $
-        \(Fn f) xs -> filter f xs == toHaskellList (L10.filter f (toCustomList xs))
+        \(Fn f) xs -> all (`elem` xs) (ourFilter f xs)
+
+    it "only holds elements that fulfill the filter, with the same amount as the original list" $
+      property $
+        \(Fn f) xs ->
+          let occurances i xs = length (filter (== i) xs)
+              filtered = ourFilter f xs
+           in all
+                (\i -> occurances i filtered == (if f i then occurances i xs else 0))
+                (D.fromList xs)
+
+    it "behaves identically to Haskell's filter function" $
+      property $
+        \(Fn f) xs -> filter f xs == ourFilter f xs
 
   describe "flipTree" $ do
     specify "flipTree Leaf == Leaf" $ do
@@ -89,6 +111,16 @@ toHaskellList (Cons x xs) = x : toHaskellList xs
 
 toCustomList :: [Int] -> List
 toCustomList = foldr Cons Nil
+
+-- Call our higher order List functions on an [Int]
+hofOnList :: ((Int -> a) -> List -> List) -> (Int -> a) -> [Int] -> [Int]
+hofOnList hof f xs = toHaskellList (hof f (toCustomList xs))
+
+ourMap :: (Int -> Int) -> [Int] -> [Int]
+ourMap = hofOnList L10.map
+
+ourFilter :: (Int -> Bool) -> [Int] -> [Int]
+ourFilter = hofOnList L10.filter
 
 treeLen :: Tree -> Int
 treeLen Leaf = 0
