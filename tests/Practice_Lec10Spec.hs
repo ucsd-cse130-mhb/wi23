@@ -2,7 +2,6 @@
 
 module Practice_Lec10Spec where
 
-import Data.Set qualified as D
 import Practice_Lec10 (List (..), Tree (..), flipTree, isFlipped)
 import Practice_Lec10 qualified as L10 -- don't blindly import map and filter
 import Test.Hspec
@@ -43,14 +42,9 @@ spec = describe "Lecture 10: All About Recursion" $ do
       property $
         \(Fn f) xs -> all (`elem` xs) (ourFilter f xs)
 
-    it "only holds elements that fulfill the filter, with the same amount as the original list" $
+    it "only holds elements that fulfill the filter, with the same order as the original list" $
       property $
-        \(Fn f) xs ->
-          let occurances i xs = length (filter (== i) xs)
-              filtered = ourFilter f xs
-           in all
-                (\i -> occurances i filtered == (if f i then occurances i xs else 0))
-                (D.fromList xs)
+        \(Fn f) xs -> filteredCheck f xs (ourFilter f xs)
 
     it "behaves identically to Haskell's filter function" $
       property $
@@ -121,6 +115,14 @@ ourMap = hofOnList L10.map
 
 ourFilter :: (Int -> Bool) -> [Int] -> [Int]
 ourFilter = hofOnList L10.filter
+
+filteredCheck :: (Int -> Bool) -> [Int] -> [Int] -> Bool
+filteredCheck _ [] [] = True
+filteredCheck _ [] _ = False -- there are more elements in filtered list, it's wrong
+filteredCheck f xs [] = not (any f xs)  -- filtered list is empty, xs should have nothing that fits filter
+filteredCheck f (x : xs) (y : ys)
+  | f x = x == y && filteredCheck f xs ys    -- check that x is in filtered list and continue
+  | otherwise = filteredCheck f xs (y : ys)  -- discard x, keep checking
 
 treeLen :: Tree -> Int
 treeLen Leaf = 0
