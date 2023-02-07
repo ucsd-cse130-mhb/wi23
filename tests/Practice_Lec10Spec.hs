@@ -119,10 +119,10 @@ ourFilter = hofOnList L10.filter
 filteredCheck :: (Int -> Bool) -> [Int] -> [Int] -> Bool
 filteredCheck _ [] [] = True
 filteredCheck _ [] _ = False -- there are more elements in filtered list, it's wrong
-filteredCheck f xs [] = not (any f xs)  -- filtered list is empty, xs should have nothing that fits filter
+filteredCheck f xs [] = not (any f xs) -- filtered list is empty, xs should have nothing that fits filter
 filteredCheck f (x : xs) (y : ys)
-  | f x = x == y && filteredCheck f xs ys    -- check that x is in filtered list and continue
-  | otherwise = filteredCheck f xs (y : ys)  -- discard x, keep checking
+  | f x = x == y && filteredCheck f xs ys -- check that x is in filtered list and continue
+  | otherwise = filteredCheck f xs (y : ys) -- discard x, keep checking
 
 treeLen :: Tree -> Int
 treeLen Leaf = 0
@@ -133,17 +133,9 @@ instance Arbitrary Tree where
   arbitrary = sized $ \n ->
     if n == 0
       then return Leaf
-      else
-        frequency
-          [ (1, return Leaf),
-            ( 4,
-              do
-                elem <- arbitrary
-                one <- resize (max 0 (n - 1)) arbitrary
-                two <- resize (max 0 (n - 1 - treeLen one)) arbitrary
-                oneof $ map return [Node elem one two, Node elem two one]
-            )
-          ]
+      else oneof [return Leaf, Node <$> arbitrary <*> subtree n <*> subtree n]
+    where
+      subtree n = resize (n `div` 2) arbitrary
 
 -- SPOILERS! Checks flipTree without assuming that the student's
 -- isFlipped is correct. See Problem 10 solutions for an easier implementation of this
