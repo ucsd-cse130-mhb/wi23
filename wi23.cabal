@@ -14,7 +14,8 @@ Library
   exposed-modules:     Practice_Lec7,
                        Practice_Lec8,
                        Practice_Lec9,
-                       Practice_Lec10
+                       Practice_Lec10,
+                       Practice_Lec11
 
   -- other-extensions:
   build-depends:       array, base
@@ -33,10 +34,11 @@ test-suite test
   hs-source-dirs:   tests     
   ghc-options:      -threaded
   main-is:          Spec.hs
-  other-modules:    Practice_Lec10Spec
-                    Practice_Lec7Spec
-                    Practice_Lec8Spec
-                    Practice_Lec9Spec
+  other-modules:    Practice_Lec10Spec,
+                    Practice_Lec7Spec,
+                    Practice_Lec8Spec,
+                    Practice_Lec9Spec,
+                    Practice_Lec11Spec
   build-depends:    base,
                     hspec,
                     QuickCheck,
