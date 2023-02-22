@@ -16,7 +16,9 @@ Library
                        Practice_Lec9,
                        Practice_Lec10,
                        Practice_Lec11,
-                       Practice_Lec12
+                       Practice_Lec12,
+                       Practice_Lec14,
+                       Practice_Lec15
 
   -- other-extensions:
   build-depends:       array, base
