@@ -1,6 +1,6 @@
 module Practice_Lec12 where
 
-import Prelude hiding (map, foldl, sum, any)
+import Prelude hiding (sum, any)
 
 -- Lecture: Wednesday, February 6, 2023
 -- Practice with the Filter, Map, and Fold-Right Patterns
