@@ -56,7 +56,10 @@ data Expr = Num Int -- number
 -- fromList ["x","y"]
 
 fv :: Expr -> Set Id
-fv e = error "TBD: fv implementation"
+fv (Num n)       = empty
+fv (Var x)       = singleton x
+fv (Bin o e1 e2) = union (fv e1) (fv e2)
+fv (Let x e1 e2) = union (fv e1) (delete x (fv e2))
 
 --  Test cases
 --
@@ -74,7 +77,14 @@ fv e = error "TBD: fv implementation"
 --   a captured `y`, but don't worry about that here.
 
 rename :: Id -> Id -> Expr -> Expr
-rename x y e = error "TBD: rename implementation"
+rename x y (Num n)       = Num n
+rename x y (Var z)
+    | x == z             = Var y 
+    | otherwise          = Var z
+rename x y (Bin o e1 e2) = Bin o (rename x y e1) (rename x y e2)
+rename x y (Let z e1 e2) 
+    | x == z             = Let z (rename x y e1) e2
+    | otherwise          = Let z (rename x y e1) (rename x y e2)
 
 --  Test cases
 --
