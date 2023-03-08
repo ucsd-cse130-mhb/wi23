@@ -54,7 +54,7 @@ subseqs xs = error "TBD: subseqs implementation"
 --   element of `xs` satisfies `p` (i.e. `p x` returns True)
 --   and False otherwise.
 
-any :: (a - > Bool) -> [a] -> Bool
+any :: (a -> Bool) -> [a] -> Bool
 any p xs = error "TBD: any implementation"
 
 -- Here are some test cases.

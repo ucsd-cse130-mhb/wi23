@@ -18,7 +18,8 @@ maximum xs = foldl f b ys
   where 
     f acc x = error "TBD: maximum f implementation"
     b       = error "TBD: maximum base implementation"
-    ys      =
+    ys :: [Int]
+    ys      = error "TBD: maximum input list implementation"
 
 -- >>> maximum [1]
 -- 1

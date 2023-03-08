@@ -11,7 +11,7 @@ import Data.Set
 
 type Id = String
 
-type Binop = Add | Sub | Mul
+data Binop = Add | Sub | Mul
 
 data Expr = Num Int -- number
           | Var Id -- variable
